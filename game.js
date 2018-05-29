@@ -1,107 +1,143 @@
 var snake = (function () {
-  
-  var velocityX = 0;
-  var velocityY = 0;
 
-  var playerX = 10;
-  var playerY = 10;
+  const FPS = 15;
+  const INITIAL_TAIL = 5;
+  
+  var velocity = { x:0, y:0 };
+  var player = { x:10, y:10 };
 
   var gridSize = 20;
   var tileCount = 20;
 
-  var fruitX = Math.floor(Math.random() * tileCount);
-  var fruitY = Math.floor(Math.random() * tileCount);
+  var fruit = { x:Math.floor(Math.random() * tileCount),
+                y:Math.floor(Math.random() * tileCount) };
 
   var trail = [];
-  var tail = 5;
+  var tail = INITIAL_TAIL;
+
+  var ActionEnum = { 'none':0, 'up':1, 'down':2, 'left':3, 'right':4 };
+  Object.freeze(ActionEnum);
+  var lastAction = ActionEnum.none;
   
   function setup () {
     document.body.style.backgroundColor='rgba(225,225,225,0.2)';
     canv = document.getElementById('gc');
     ctx = canv.getContext('2d');
     document.addEventListener('keydown', keyPush);
+    // document.removeEventListener('keydown', keyPush);
     
     game.reset();
-    setInterval(game.loop,1000/15);
+    setInterval(game.loop,1000/FPS);
   }
 
   var game = {
 
     reset: function () {
-      tail = 5;
-      velocityX = 0;
-      velocityY = 0;
-      playerX = 10;
-      playerY = 10;
+      console.debug('========\nNEW GAME\n========');
+      tail = INITIAL_TAIL;
+      velocity.x = 0;
+      velocity.y = 0;
+      player.x = 10;
+      player.y = 10;
+      fruit.x = Math.floor(Math.random() * tileCount);
+      fruit.y = Math.floor(Math.random() * tileCount);
+
+      lastAction = ActionEnum.none;
 
       trail = [];
-      trail.push({ x: playerX, y: playerY });
+      trail.push({ x: player.x, y: player.y });
     },
 
     action: {
       up: function () {
-        if (!(trail[0].y+1 == trail[1].y)){
-          velocityX = 0;
-          velocityY = -1;
+        if (lastAction != ActionEnum.down){
+          velocity.x = 0;
+          velocity.y = -1;
+          // lastAction = ActionEnum.up;
         }
       },
       down: function () {
-        if (!(trail[0].y-1 == trail[1].y)){
-          velocityX = 0;
-          velocityY = 1;
+        if (lastAction != ActionEnum.up){
+          velocity.x = 0;
+          velocity.y = 1;
+          // lastAction = ActionEnum.down;
         }
       },
       left: function () {
-        if (!(trail[0].x+1 == trail[1].x)) {
-          velocityX = -1;
-          velocityY = 0;
+        if (lastAction != ActionEnum.right){
+          velocity.x = -1;
+          velocity.y = 0;
+          // lastAction = ActionEnum.left;
         }
       },
       right: function () {
-        if (!(trail[0].x-1 == trail[1].x)) {
-          velocityX = 1;
-          velocityY = 0;
+        if (lastAction != ActionEnum.left){
+          velocity.x = 1;
+          velocity.y = 0;
+          // lastAction = ActionEnum.right;
         }
       }
     },
 
     log: function () {
-      console.log('====================');
-      console.log('x:' + playerX + ', y:' + playerY);
-      console.log('tail:' + tail + ', trail.length:' + trail.length);
+      console.debug('====================');
+      console.debug('x:' + player.x + ', y:' + player.y);
+      console.debug('tail:' + tail + ', trail.length:' + trail.length);
     },
 
     loop: function () {
-      playerX += velocityX;
-      playerY += velocityY;
+
+      function DontHitWall () {
+        if(player.x < 0) player.x = tileCount-1;
+        if(player.x >= tileCount) player.x = 0;
+        if(player.y < 0) player.y = tileCount-1;
+        if(player.y >= tileCount) player.y = 0;
+      }
+      function HitWall () {
+        if(player.x < 0) game.reset();
+        if(player.x > tileCount-1) game.reset();
+        if(player.y < 0) game.reset();
+        if(player.y > tileCount-1) game.reset();
+      }
       
-      if(playerX < 0) playerX = tileCount-1;
-      if(playerX > tileCount-1) playerX = 0;
-      if(playerY < 0) playerY = tileCount-1;
-      if(playerY > tileCount-1) playerY = 0;
+      player.x += velocity.x;
+      player.y += velocity.y;
       
+      if (velocity.x == 0 && velocity.y == -1) lastAction = ActionEnum.up;
+      if (velocity.x == 0 && velocity.y == 1) lastAction = ActionEnum.down;
+      if (velocity.x == -1 && velocity.y == 0) lastAction = ActionEnum.left;
+      if (velocity.x == 1 && velocity.y == 0) lastAction = ActionEnum.right;
+
+      DontHitWall();
+
+      game.log();
+
+      trail.push({x:player.x, y:player.y});
+      while(trail.length > tail) trail.shift();
+
       ctx.fillStyle = 'black';
       ctx.fillRect(0,0,canv.width,canv.height);
       
-      for(var i=0; i<trail.length; i++) {
-        ctx.fillStyle = 'lime';
+      ctx.fillStyle = 'green';
+      for(var i=0; i<trail.length-1; i++) {
         ctx.fillRect(trail[i].x * gridSize+1, trail[i].y * gridSize+1, gridSize-2, gridSize-2);
         
-        if (trail[i].x == playerX && trail[i].y == playerY) game.reset();
+        console.log(i + ' => player:' + player.x, player.y + ', trail:' + trail[i].x, trail[i].y);
+        if (!(velocity.x == 0 && velocity.y == 0) && trail[i].x == player.x && trail[i].y == player.y){
+          game.reset();
+        }
+        ctx.fillStyle = 'lime';
       }
+      ctx.fillRect(trail[trail.length-1].x * gridSize+1, trail[trail.length-1].y * gridSize+1, gridSize-2, gridSize-2);
       
-      if (playerX == fruitX && playerY == fruitY) {
+      if (player.x == fruit.x && player.y == fruit.y) {
         tail++;
-        fruitX = Math.floor(Math.random()*tileCount);
-        fruitY = Math.floor(Math.random()*tileCount);
+        fruit.x = Math.floor(Math.random()*tileCount);
+        fruit.y = Math.floor(Math.random()*tileCount);
       }
-      trail.push({x:playerX, y:playerY});
-      while(trail.length > tail) trail.shift();
       
       ctx.fillStyle = 'red';
-      ctx.fillRect(fruitX * gridSize+1, fruitY * gridSize+1, gridSize-2, gridSize-2);
-      
-      game.log();
+      ctx.fillRect(fruit.x * gridSize+1, fruit.y * gridSize+1, gridSize-2, gridSize-2);
     }
   }
 
