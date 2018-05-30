@@ -32,6 +32,9 @@ var snake = (function () {
   var game = {
 
     reset: function () {
+      ctx.fillStyle = 'grey';
+      ctx.fillRect(0, 0, canv.width, canv.height);
+
       tail = INITIAL_TAIL;
       velocity.x = 0;
       velocity.y = 0;
@@ -101,16 +104,20 @@ var snake = (function () {
       if (velocity.x == 0 && velocity.y == 1) lastAction = ActionEnum.down;
       if (velocity.x == -1 && velocity.y == 0) lastAction = ActionEnum.left;
       if (velocity.x == 1 && velocity.y == 0) lastAction = ActionEnum.right;
-
+      
       DontHitWall();
-
+      
       // game.log();
-
+      
       trail.push({x:player.x, y:player.y});
       while(trail.length > tail) trail.shift();
-
+      
       ctx.fillStyle = 'black';
       ctx.fillRect(0,0,canv.width,canv.height);
+
+      ctx.fillStyle = 'grey';
+      ctx.font = "small-caps 16px Helvetica";
+      ctx.fillText("size: " + tail, 320, 30);
       
       ctx.fillStyle = 'green';
       for(var i=0; i<trail.length-1; i++) {
@@ -132,19 +139,25 @@ var snake = (function () {
       
       ctx.fillStyle = 'red';
       ctx.fillRect(fruit.x * gridSize+1, fruit.y * gridSize+1, gridSize-2, gridSize-2);
+      
+      if(velocity.x==0 && velocity.y==0) {
+        ctx.fillStyle = 'grey';
+        ctx.font = "small-caps 14px Helvetica";
+        ctx.fillText("press ARROW KEYS to START...", 12, 386);
+      }
     }
   }
-
+  
   function keyPush (evt) {
     switch(evt.keyCode) {
       case 37: //left
-        game.action.left();
-        break;
-
+      game.action.left();
+      break;
+      
       case 38: //up
-        game.action.up();
-        break;
-        
+      game.action.up();
+      break;
+      
         case 39: //right
         game.action.right();
         break;
