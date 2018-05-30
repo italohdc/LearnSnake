@@ -135,6 +135,17 @@ var snake = (function () {
         tail++;
         fruit.x = Math.floor(Math.random()*tileCount);
         fruit.y = Math.floor(Math.random()*tileCount);
+        
+        while((function () {
+          for(var i=0; i<trail.length; i++) {
+            if (trail[i].x == fruit.x && trail[i].y == fruit.y) {
+              fruit.x = Math.floor(Math.random()*tileCount);
+              fruit.y = Math.floor(Math.random()*tileCount);
+              return true;
+            }
+          }
+          return false;
+        })());
       }
       
       ctx.fillStyle = 'red';
