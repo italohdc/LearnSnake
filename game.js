@@ -1,12 +1,14 @@
 var Snake = (function () {
 
   const INITIAL_TAIL = 5;
+
+  var intervalID;
   
   var velocity = { x:0, y:0 };
   var player = { x:10, y:10 };
 
-  var gridSize = 20;
-  var tileCount = 20;
+  var tileCount = 5;
+  var gridSize = 400/tileCount;
 
   var walls = false;
 
@@ -15,6 +17,8 @@ var Snake = (function () {
 
   var trail = [];
   var tail = INITIAL_TAIL;
+
+  var reward = 0;
 
   var ActionEnum = { 'none':0, 'up':1, 'down':2, 'left':3, 'right':4 };
   Object.freeze(ActionEnum);
@@ -41,6 +45,7 @@ var Snake = (function () {
       player.x = 10;
       player.y = 10;
       this.RandomFruit();
+      reward = -1;
 
       lastAction = ActionEnum.none;
 
@@ -95,6 +100,8 @@ var Snake = (function () {
 
     loop: function () {
 
+      reward = 0;
+
       function DontHitWall () {
         if(player.x < 0) player.x = tileCount-1;
         if(player.x >= tileCount) player.x = 0;
@@ -137,10 +144,6 @@ var Snake = (function () {
         while(trail.length > tail) trail.shift();
       }
 
-      ctx.fillStyle = 'grey';
-      ctx.font = "small-caps 16px Helvetica";
-      ctx.fillText("size: " + tail, 310, 40);
-
       if(!stopped) {
         ctx.fillStyle = 'rgba(200,200,200,0.2)';
         ctx.font = "small-caps 14px Helvetica";
@@ -162,6 +165,7 @@ var Snake = (function () {
       
       if (player.x == fruit.x && player.y == fruit.y) {
         tail++;
+        reward = 1;
         game.RandomFruit();
         // make sure new fruit didn't spawn in snake tail 
         while((function () {
@@ -183,6 +187,12 @@ var Snake = (function () {
         ctx.font = "small-caps bold 14px Helvetica";
         ctx.fillText("press ARROW KEYS to START...", 24, 374);
       }
+
+      ctx.fillStyle = 'white';
+      ctx.font = "bold small-caps 16px Helvetica";
+      ctx.fillText("size: " + tail, 310, 40);
+
+      return reward;
     }
   }
   
@@ -204,11 +214,11 @@ var Snake = (function () {
       game.action.down();
       break;
       
-      case 32:
+      case 32: //space
       Snake.pause();
       break;
       
-      case 27:
+      case 27: //esc
       game.reset();
       break;
     }
@@ -216,12 +226,19 @@ var Snake = (function () {
 
   return {
     
-    start: function (wall = false, keyboard = true, fps = 15) {
-      this.setup.keyboard(keyboard);
-      this.setup.wall(wall);
-
+    init: function () {
       window.onload = setup;
-      setInterval(game.loop, 1000 / fps);
+    },
+
+    start: function (fps = 15) {
+      window.onload = setup;
+      intervalID = setInterval(game.loop, 1000 / fps);
+    },
+
+    loop: game.loop,
+
+    stop: function () {
+      clearInterval(intervalID);
     },
     
     setup: {
@@ -231,6 +248,26 @@ var Snake = (function () {
       },
       wall: function (state) {
         walls = state;
+      }
+    },
+
+    action: function (act) {
+      switch(act) {
+        case 'left':
+          game.action.left();
+          break;
+
+        case 'up':
+          game.action.up();
+          break;
+
+        case 'right':
+          game.action.right();
+          break;
+
+        case 'down':
+          game.action.down();
+          break;
       }
     },
     
@@ -245,10 +282,18 @@ var Snake = (function () {
       trail: function () {
         return trail;
       }
+    },
+
+    info: {
+      tileCount: tileCount
     }
   };
 
 })();
 
-Snake.start();
+Snake.init();
+Snake.setup.keyboard(false);
+// Snake.setup.wall(false);
+// Snake.start(15);
 // Snake.pause();
+// Snake.stop();
