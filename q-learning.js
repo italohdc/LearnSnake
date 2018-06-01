@@ -9,7 +9,7 @@ var QLearning = (function () {
   var qTable = {};
   var learningRate = 0.85; // Learning Rate
   var discountFactor = 0.9; // Discount Factor of Future Rewards
-  var randomize = 0.3; // Randomization Rate on Action
+  var randomize = 0.05; // Randomization Rate on Action
 
   var availableActions = ['up', 'down', 'left', 'right'];
 
@@ -110,7 +110,6 @@ var QLearning = (function () {
     if(instantReward > 0) score+=instantReward;
     if(instantReward < 0) missed+=instantReward;
 
-    console.log(score, missed);
   }
 
   return {
@@ -120,6 +119,18 @@ var QLearning = (function () {
     
     stop: function () {
       clearInterval(intervalID);
+    },
+
+    changeConst: {
+      LearningRate: function (lr) {
+        learningRate = lr;
+      },
+      DiscountFactor: function (df) {
+        discountFactor = df;
+      },
+      Randomization: function (rand) {
+        randomize = rand;
+      }
     },
     
     changeFPS: function (fps) {
@@ -133,13 +144,13 @@ var QLearning = (function () {
     },
 
     info: {
-      score: score,
-      missed: missed
+      score: function () {
+        return score;
+      },
+      missed: function () {
+        return missed;
+      }
     }
   }
 
 })();
-
-QLearning.run();
-QLearning.changeSpeed(4);
-QLearning.changeFPS(15);

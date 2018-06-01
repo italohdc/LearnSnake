@@ -195,8 +195,8 @@ var Snake = (function () {
 
       ctx.fillStyle = 'white';
       ctx.font = "bold small-caps 16px Helvetica";
-      ctx.fillText("points: " + points, 310, 40);
-      ctx.fillText("top: " + pointsMax, 314, 60);
+      ctx.fillText("points: " + points, 288, 40);
+      ctx.fillText("top: " + pointsMax, 292, 60);
 
       return reward;
     }
@@ -296,10 +296,3 @@ var Snake = (function () {
   };
 
 })();
-
-Snake.init();
-Snake.setup.keyboard(false);
-// Snake.setup.wall(false);
-// Snake.start(15);
-// Snake.pause();
-// Snake.stop();

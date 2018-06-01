@@ -2,12 +2,34 @@
 <html>
 <head>
 	<title>LearnSnake</title>
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <canvas id="gc" width="400" height="400"></canvas>
+	<div id="game-container">
+		<canvas id="gc" width="400" height="400"></canvas>
+		
+		<div id="setup-container">
+			<div id="game-info">
+				<p id="score" class="info-score">score: </p>
+				<p id="missed" class="info-score">missed: </p>
+			</div>
+
+			<div id="game-setup">
+				<p class="title-slider">Learning Rate</p>
+				<input id="rangeLR" type="range" class="slider" min="0" max="100" value="85">
+				<p class="title-slider">Discount Factor</p>
+				<input id="rangeDF" type="range" class="slider" min="0" max="100" value="90">
+				<p class="title-slider">Action Randomization</p>
+				<input id="rangeRandom" type="range" class="slider" min="0" max="100" value="5">
+
+				<button id="btnTrain" type="button" class="btnGame">&#9654; train</button>
+			</div>
+		</div>
+	</div>
 
 	<script type="text/javascript" src="game.js"></script>
 	<script type="text/javascript" src="q-learning.js"></script>
+	<script type="text/javascript" src="user-interface.js"></script>
 </body>
 </html>
