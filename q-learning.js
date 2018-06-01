@@ -72,7 +72,7 @@ var QLearning = (function () {
     }
 
     let maxValue = q[availableActions[0]];
-    let choseAction = [availableActions[0]];
+    let choseAction = availableActions[0];
     let actionsZero = [];
     for(let i = 0; i < availableActions.length; i++) {
       if(q[availableActions[i]] == 0) actionsZero.push(availableActions[i]);

@@ -4,16 +4,17 @@ var Snake = (function () {
 
   var intervalID;
   
-  var velocity = { x:0, y:0 };
-  var player = { x:10, y:10 };
-
-  var tileCount = 6;
+  var tileCount = 8;
   var gridSize = 400/tileCount;
+
+  const INITIAL_PLAYER = { x: Math.floor(tileCount / 2), y: Math.floor(tileCount / 2) };
+  
+  var velocity = { x:0, y:0 };
+  var player = { x: INITIAL_PLAYER.x, y: INITIAL_PLAYER.y };
 
   var walls = false;
 
-  var fruit = { x:Math.floor(Math.random() * tileCount),
-                y:Math.floor(Math.random() * tileCount) };
+  var fruit = { x:1, y:1 };
 
   var trail = [];
   var tail = INITIAL_TAIL;
@@ -45,8 +46,8 @@ var Snake = (function () {
       points = 0;
       velocity.x = 0;
       velocity.y = 0;
-      player.x = 10;
-      player.y = 10;
+      player.x = INITIAL_PLAYER.x;
+      player.y = INITIAL_PLAYER.y;
       // this.RandomFruit();
       reward = -1;
 
@@ -103,7 +104,7 @@ var Snake = (function () {
 
     loop: function () {
 
-      reward = 0;
+      reward = 0.1;
 
       function DontHitWall () {
         if(player.x < 0) player.x = tileCount-1;
@@ -170,7 +171,7 @@ var Snake = (function () {
         // tail++;
         points++;
         if(points > pointsMax) pointsMax = points;
-        reward = 1;
+        reward = 2;
         game.RandomFruit();
         // make sure new fruit didn't spawn in snake tail 
         while((function () {
