@@ -8,7 +8,8 @@ var QLearning = (function () {
   
   var qTable = {};
   var learningRate = 0.85; // Learning Rate
-  var discountFactor = 0.9; // Discount Factor
+  var discountFactor = 0.9; // Discount Factor of Future Rewards
+  var randomize = 0.3; // Randomization Rate on Action
 
   var availableActions = ['up', 'down', 'left', 'right'];
 
@@ -64,6 +65,11 @@ var QLearning = (function () {
 
   var bestAction = function (s) {
     let q = whichTable(s);
+    
+    if(Math.random() < randomize){
+      let random = Math.floor(Math.random() * availableActions.length);
+      return availableActions[random];
+    }
 
     let maxValue = q[availableActions[0]];
     let choseAction = [availableActions[0]];
