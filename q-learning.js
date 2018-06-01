@@ -8,10 +8,14 @@ var QLearning = (function () {
   
   var qTable = {};
   var learningRate = 0.85; // Learning Rate
-  var discountFactor = 0.99; // Discount Factor
+  var discountFactor = 0.9; // Discount Factor
+
+  var availableActions = ['up', 'down', 'left', 'right'];
 
   var score = 0;
   var missed = 0;
+
+  var intervalID;
 
   var whichStateNow = function () {
     let tileCount = Snake.info.tileCount;
@@ -59,27 +63,25 @@ var QLearning = (function () {
   }
 
   var bestAction = function (s) {
-    var q = whichTable(s);
-    if((q.up == q.down == q.left == q.right) && q.up == 0) {
-      switch (Math.floor(Math.random() * 4)){
-        case 0:
-         return 'up';
-        case 1:
-         return 'down';
-        case 2:
-         return 'left';
-        case 3:
-         return 'right';
+    let q = whichTable(s);
+
+    let maxValue = q[availableActions[0]];
+    let choseAction = [availableActions[0]];
+    let actionsZero = [];
+    for(let i = 0; i < availableActions.length; i++) {
+      if(q[availableActions[i]] == 0) actionsZero.push(availableActions[i]);
+      if(q[availableActions[i]] > maxValue){
+        maxValue = q[availableActions[i]];
+        choseAction = availableActions[i];
       }
     }
-    
-    var act = 'up';
-    var actValue = q.up;
-    if(actValue < q.down) act = 'down';
-    if(actValue < q.left) act = 'left';
-    if(actValue < q.right) act = 'right';
 
-    return act;
+    if(maxValue == 0){
+      let random = Math.floor(Math.random() * actionsZero.length);
+      choseAction = actionsZero[random];
+    }
+
+    return choseAction;
   }
 
   var updateQTable = function (state0, state1, reward, act) {
@@ -105,6 +107,33 @@ var QLearning = (function () {
     console.log(score, missed);
   }
 
-  setInterval(Algorithm, 1000/15);
+  return {
+    run: function () {
+      intervalID = setInterval(Algorithm, 1000/15);
+    },
+    
+    stop: function () {
+      clearInterval(intervalID);
+    },
+    
+    changeFPS: function (fps) {
+      clearInterval(intervalID);
+      intervalID = setInterval(Algorithm, 1000/fps);
+    },
+
+    changeSpeed: function (ms) {
+      clearInterval(intervalID);
+      intervalID = setInterval(Algorithm, ms);
+    },
+
+    info: {
+      score: score,
+      missed: missed
+    }
+  }
 
 })();
+
+QLearning.run();
+QLearning.changeSpeed(4);
+QLearning.changeFPS(15);

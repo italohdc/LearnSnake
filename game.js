@@ -1,13 +1,13 @@
 var Snake = (function () {
 
-  const INITIAL_TAIL = 5;
+  const INITIAL_TAIL = 6;
 
   var intervalID;
   
   var velocity = { x:0, y:0 };
   var player = { x:10, y:10 };
 
-  var tileCount = 5;
+  var tileCount = 6;
   var gridSize = 400/tileCount;
 
   var walls = false;
@@ -19,6 +19,8 @@ var Snake = (function () {
   var tail = INITIAL_TAIL;
 
   var reward = 0;
+  var points = 0;
+  var pointsMax = 0;
 
   var ActionEnum = { 'none':0, 'up':1, 'down':2, 'left':3, 'right':4 };
   Object.freeze(ActionEnum);
@@ -40,11 +42,12 @@ var Snake = (function () {
       ctx.fillRect(0, 0, canv.width, canv.height);
 
       tail = INITIAL_TAIL;
+      points = 0;
       velocity.x = 0;
       velocity.y = 0;
       player.x = 10;
       player.y = 10;
-      this.RandomFruit();
+      // this.RandomFruit();
       reward = -1;
 
       lastAction = ActionEnum.none;
@@ -164,7 +167,9 @@ var Snake = (function () {
       ctx.fillRect(trail[trail.length-1].x * gridSize+1, trail[trail.length-1].y * gridSize+1, gridSize-2, gridSize-2);
       
       if (player.x == fruit.x && player.y == fruit.y) {
-        tail++;
+        // tail++;
+        points++;
+        if(points > pointsMax) pointsMax = points;
         reward = 1;
         game.RandomFruit();
         // make sure new fruit didn't spawn in snake tail 
@@ -190,7 +195,8 @@ var Snake = (function () {
 
       ctx.fillStyle = 'white';
       ctx.font = "bold small-caps 16px Helvetica";
-      ctx.fillText("size: " + tail, 310, 40);
+      ctx.fillText("points: " + points, 310, 40);
+      ctx.fillText("top: " + pointsMax, 314, 60);
 
       return reward;
     }
