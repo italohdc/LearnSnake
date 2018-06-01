@@ -95,7 +95,7 @@ var QLearning = (function () {
     var q1 = whichTable(state1);
 
     var newValue = reward + discountFactor * Math.max(q1.up, q1.down, q1.left, q1.right) - q0[act];
-    qTable[state0][act] = learningRate * newValue;
+    qTable[state0][act] = q0[act] + learningRate * newValue;
   }
 
   function Algorithm () {
