@@ -2,7 +2,7 @@ var UserInterface = (function () {
 
     Snake.init();
     Snake.setup.keyboard(false);
-    Snake.setup.wall(true);
+    Snake.setup.wall(false);
 
     QLearning.run();
     QLearning.changeSpeed(4);

@@ -104,7 +104,7 @@ var Snake = (function () {
 
     loop: function () {
 
-      reward = 0.1;
+      reward = 0;
 
       function DontHitWall () {
         if(player.x < 0) player.x = tileCount-1;
@@ -171,7 +171,7 @@ var Snake = (function () {
         // tail++;
         points++;
         if(points > pointsMax) pointsMax = points;
-        reward = 2;
+        reward = 1;
         game.RandomFruit();
         // make sure new fruit didn't spawn in snake tail 
         while((function () {

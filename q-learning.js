@@ -36,10 +36,10 @@ var QLearning = (function () {
     while(fruitRelativePose.y < 0) fruitRelativePose.y += tileCount;
     while(fruitRelativePose.y > tileCount) fruitRelativePose.y -= tileCount;
 
-    var stateName = fruitRelativePose.x + ',' + fruitRelativePose.y + ',' +
-      trail.length;
+    var stateName = fruitRelativePose.x + ',' + fruitRelativePose.y;
+      // + ',' + trail.length;
     
-    for(let index = 0; index < trail.length; index++) {
+    for(let index = 0; index < 1; index++) {
       
       if (trailRelativePose[index] == undefined) trailRelativePose.push({ x:0, y:0 });
       
