@@ -1,6 +1,7 @@
 var Snake = (function () {
 
   const INITIAL_TAIL = 6;
+  var fixedTail = true;
 
   var intervalID;
   
@@ -168,7 +169,7 @@ var Snake = (function () {
       ctx.fillRect(trail[trail.length-1].x * gridSize+1, trail[trail.length-1].y * gridSize+1, gridSize-2, gridSize-2);
       
       if (player.x == fruit.x && player.y == fruit.y) {
-        // tail++;
+        if(!fixedTail) tail++;
         points++;
         if(points > pointsMax) pointsMax = points;
         reward = 1;
@@ -244,17 +245,27 @@ var Snake = (function () {
 
     loop: game.loop,
 
+    reset: game.reset,
+
     stop: function () {
       clearInterval(intervalID);
     },
     
     setup: {
       keyboard: function (state) {
-        if (state) document.addEventListener('keydown', keyPush);
-        else document.removeEventListener('keydown', keyPush);
+        state ?
+          document.addEventListener('keydown', keyPush):
+          document.removeEventListener('keydown', keyPush);
       },
       wall: function (state) {
         walls = state;
+      },
+      tileCount: function (size) {
+        tileCount = size;
+        gridSize = 400 / tileCount;        
+      },
+      fixedTail: function (state) {
+        fixedTail = state;
       }
     },
 

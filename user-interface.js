@@ -8,6 +8,32 @@ var UserInterface = (function () {
     QLearning.changeSpeed(4);
     QLearning.changeFPS(15);
 
+    /// EASTER EGG ///
+    document.addEventListener('keyup', KonamiCode);
+    var konamiOrder = [38,38,40,40,37,39,37,39,66,65];
+    var konamiIndex = 0;
+
+    function KonamiCode (evt) {
+        if(konamiOrder[konamiIndex] == evt.keyCode){
+            konamiIndex++
+            console.log('yeah');
+        } 
+        else {
+            konamiIndex = 0;
+            console.log('nope');
+        }
+
+        if (konamiIndex == konamiOrder.length) {
+            document.removeEventListener('keyup', KonamiCode);
+            QLearning.stop();
+            Snake.setup.keyboard(true);
+            Snake.setup.tileCount(20);
+            Snake.setup.fixedTail(false);
+            Snake.reset();
+            Snake.start();
+        }
+    }
+    ///
 
     var btnTrain = document.getElementById('btnTrain');
     btnTrain.addEventListener('click', speedFaster);
