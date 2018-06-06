@@ -208,26 +208,32 @@ var Snake = (function () {
     switch(evt.keyCode) {
       case 37: //left
       game.action.left();
+      evt.preventDefault();
       break;
       
       case 38: //up
       game.action.up();
+      evt.preventDefault();
       break;
       
       case 39: //right
       game.action.right();
+      evt.preventDefault();
       break;
       
       case 40: //down
       game.action.down();
+      evt.preventDefault();
       break;
       
       case 32: //space
       Snake.pause();
+      evt.preventDefault();
       break;
       
       case 27: //esc
       game.reset();
+      evt.preventDefault();
       break;
     }
   }
@@ -253,9 +259,12 @@ var Snake = (function () {
     
     setup: {
       keyboard: function (state) {
-        state ?
-          document.addEventListener('keydown', keyPush):
+        if (state) {
+          document.addEventListener('keydown', keyPush);
+        }
+        else {
           document.removeEventListener('keydown', keyPush);
+        }
       },
       wall: function (state) {
         walls = state;
