@@ -1,12 +1,14 @@
-# LearnSnake
+# LearnSnake: [italolelis.com/snake](https://italolelis.com/snake)
 
-This is a implementation of an Artificial Intelligence fully written in Javascript that learns to play Snake using Reinforcement Learning.
+This is a implementation of an Artificial Intelligence fully written in **Javascript** that learns to play **Snake** using **Reinforcement Learning** (Q-Learning).
 
 ![Snake autonomously trying to catch the fruit...](assets/snake-sample.gif)
 
-It runs directly in the browser, no installation is necessary. You can see it working and tweak some variables.
+It runs directly in the browser, no installation is necessary. See it working and tweak some variables:
 
-## [- Try it yourself -](https://italolelis.com/LearnSnake)
+### [- Try it yourself -](https://italolelis.com/snake)
+
+You can read an explanation about this project [here](https://italolelis.com/snake).
 
 # References
 
