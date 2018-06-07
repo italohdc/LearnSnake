@@ -16,11 +16,9 @@ var UserInterface = (function () {
     function KonamiCode (evt) {
         if(konamiOrder[konamiIndex] == evt.keyCode){
             konamiIndex++
-            console.log('yeah');
         } 
         else {
             konamiIndex = 0;
-            console.log('nope');
         }
 
         if (konamiIndex == konamiOrder.length) {
