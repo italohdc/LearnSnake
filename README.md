@@ -4,7 +4,9 @@ This is a implementation of an Artificial Intelligence fully written in **Javasc
 
 ![Snake autonomously trying to catch the fruit...](assets/snake-sample.gif)
 
-It runs directly in the browser, no installation is necessary. See it working and tweak some variables: [Try it yourself](https://italolelis.com/snake) !
+It runs directly in the browser. You don't need to setup an environment and no installation is necessary.
+
+See it working and tweak some variables: [Try it yourself](https://italolelis.com/snake) !
 
 # How it works
 
@@ -18,7 +20,7 @@ I could have forked another Snake repository, but since I didn't know Javascript
 
 To develop this part of the project, I used these contents for guidance:
 
-- [Coding "Snake" in 4 min 30 sec <small>{% include brand-icon.html id="youtube" %}</small>](https://www.youtube.com/watch?v=xGmXxpIj6vs)
+- [Coding "Snake" in 4 min 30 sec](https://www.youtube.com/watch?v=xGmXxpIj6vs)
 - [Mastering the Module Pattern](https://toddmotto.com/mastering-the-module-pattern/) (not really about Snake itself, but a pattern I tried to follow on the project)
 
 See [``game.js``](https://github.com/italohdc/LearnSnake/blob/master/game.js) for the source code.
@@ -29,7 +31,7 @@ Accordingly to [Christopher Watkins](http://www.cs.rhul.ac.uk/~chrisw/), "Q-Lear
 
 A Q-Table is a matrix with a set of states and respective action's probability of success. When the agent explore the environment, the table is updated. The action with the biggest value is considered the best action to make.
 
-![](assets/qtable.png" description="Example)a QTable (the best action is highlighted)" %}
+![Example of a QTable (the best action is highlighted)](assets/qtable.png)
 
 In this guide I will explain how I applied Q-Learning in the Snake game. If you want to understand more deeply (yet in a simple way) about Q-Learning and Reinforcement Learning, I suggest this [Medium post](https://medium.com/machine-learning-for-humans/reinforcement-learning-6eacf258b265) by [Vishal Maini](https://twitter.com/v_maini).
 
@@ -92,7 +94,8 @@ In this way, the dictionary of states store the name like this:
 
 The Q-Table is stored using a Javascript Object and looks like this:
 
-![](assets/qtable-json.png)
+![Example of a QTable in the code
+](assets/qtable-json.png)
 
 > If you want to test this algorithm with a full set of states, you can clone the project on GitHub and change a few lines to see how it behaves.
 
