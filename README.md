@@ -4,7 +4,9 @@ This is a implementation of an Artificial Intelligence fully written in **Javasc
 
 ![Snake autonomously trying to catch the fruit...](assets/snake-sample.gif)
 
-It runs directly in the browser, no installation is necessary. See it working and tweak some variables: [Try it yourself](https://italolelis.com/snake) !
+It runs directly in the browser. You don't need to setup an environment and no installation is necessary.
+
+See it working and tweak some variables: [Try it yourself](https://italolelis.com/snake) !
 
 # How it works
 
