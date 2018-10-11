@@ -107,8 +107,8 @@ var QLearning = (function () {
 
     updateQTable(currentState, nextState, instantReward, action);
 
-    if(instantReward > 0) score+=instantReward;
-    if(instantReward < 0) missed+=instantReward;
+    if(instantReward > 0) score += Math.trunc(instantReward);
+    if(instantReward < 0) missed += Math.trunc(instantReward);
 
   }
 
@@ -150,6 +150,15 @@ var QLearning = (function () {
       missed: function () {
         return missed;
       }
+    },
+
+    qTable: {
+      export: function () {
+        return qTable;
+      },
+      import: function (newQ) {
+        qTable = newQ;
+      } 
     }
   }
 

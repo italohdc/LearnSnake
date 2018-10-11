@@ -1,6 +1,6 @@
 var Snake = (function () {
 
-  const INITIAL_TAIL = 6;
+  const INITIAL_TAIL = 4;
   var fixedTail = true;
 
   var intervalID;
@@ -105,7 +105,7 @@ var Snake = (function () {
 
     loop: function () {
 
-      reward = 0;
+      reward = -0.1;
 
       function DontHitWall () {
         if(player.x < 0) player.x = tileCount-1;

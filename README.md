@@ -14,7 +14,7 @@ The first question I was asked when I came up with this idea: "Why do you want t
 
 ## Snake (the game itself)
 
-Snake is a game in which a snake needs to explore an environment and catch the fruit without hitting any obstacle or itself. Every time the snake catches a fruit, its size increases (for practical reasons explained in the next section, the snake has a fixed size in the live example above).
+Snake is a game in which a snake needs to explore an environment and catch the fruit without hitting any obstacle or itself. Every time the snake catches a fruit, its size increases.
 
 I could have forked another Snake repository, but since I didn't know Javascript (and I would need to use it on the next steps), I thought that developing the Snake game from scratch would be a good idea to learn more about it.
 
@@ -75,22 +75,22 @@ The only reward is given when the **snake grabs the fruit** ( **+1** ). I tried 
 
 The penalty happens whenever the **game resets** ( **-1** ), that is, the snake hits its tail or a wall.
 
-If anything else happens, there's no reward ( 0 ).
+If anything else happens, there's a minor negative reward ( -0.1 ). That's ideal to minimize the path taken to catch the fruit and makes the training process faster.
 
 | Action | Reward |
 |-----------------|----|
 | Catch the Fruit | + 1 |
 | Hits tail | - 1 |
 | Hits wall | - 1 |
-| Else | 0 |
+| Else | - 0.1 |
 
 ### States
 
-First I tried creating a dictionary of states based on **all** the snake positions and trail formats. Although it worked, because of the high number of states, it was necessary to let the code train for a very long time. Since this project was intended to give a fast explanation and to show a fast result to the user (and the results are not saved across sessions), this way to save states was not the best approach.
+First I tried creating a dictionary of states based on **all** the snake positions and trail formats. Although it worked, as a result of the high number of states, it was necessary to let the code train for a very long time. Since this project was intended to give a fast explanation and to show a fast result to the user (and the results are not saved across sessions), this way to save states in the dictionary was not the best approach.
 
-To work around this limitation, the tail got a fixed size and the dictionary of states is based only in the **relative position of the fruit** to the head of the snake and the **relative position of the last tail section** to the head of the snake.
+To work around this limitation, the dictionary of states is based only in the **relative position of the fruit** to the head of the snake and the **relative position of the last tail section** to the head of the snake.
 
-In this way, the dictionary of states store the name like this: 
+In this way, the dictionary of states stores the name like this: 
 
 ![](assets/rel-pose.png)
 

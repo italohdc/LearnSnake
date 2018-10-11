@@ -3,10 +3,12 @@ var UserInterface = (function () {
     Snake.init();
     Snake.setup.keyboard(false);
     Snake.setup.wall(false);
+    Snake.setup.fixedTail(false);
 
+    const defaultFPS = 8;
     QLearning.run();
     QLearning.changeSpeed(4);
-    QLearning.changeFPS(15);
+    QLearning.changeFPS(defaultFPS);
 
     /// EASTER EGG ///
     document.addEventListener('keyup', KonamiCode);
@@ -46,8 +48,8 @@ var UserInterface = (function () {
     setInterval(loop, 100);
 
     function loop () {
-        infoScore.innerHTML = 'score: ' + QLearning.info.score();
-        infoMissed.innerHTML = 'missed: ' + QLearning.info.missed();
+        infoScore.innerHTML = 'scored: <b>' + QLearning.info.score() + (QLearning.info.score() == 1 ? ' point' : ' points') + '</b>';
+        infoMissed.innerHTML = 'died: <b>' + Math.abs(QLearning.info.missed()) + (Math.abs(QLearning.info.missed()) == 1 ? ' time' : ' times') + '</b>';
 
         QLearning.changeConst.LearningRate(0.01*rangerLR.value);
         QLearning.changeConst.DiscountFactor(0.01*rangerDF.value);
@@ -59,13 +61,13 @@ var UserInterface = (function () {
         btnTrain.innerHTML = '&#9646;&#9646; train';
         btnTrain.removeEventListener('click', speedFaster);
         btnTrain.addEventListener('click', speedSlower);
-    };
+    }
     
     function speedSlower () {
-        QLearning.changeFPS(15);
+        QLearning.changeFPS(defaultFPS);
         btnTrain.innerHTML = '&#9654; train';
         btnTrain.removeEventListener('click', speedSlower);
         btnTrain.addEventListener('click', speedFaster);
-    };
+    }
 
 })();
