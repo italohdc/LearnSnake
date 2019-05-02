@@ -7,8 +7,8 @@
 <body>
 
 	<div id="game-container">
-		<canvas id="gc" width="400" height="400"></canvas>
-		
+		<canvas id="gc" class="game-canvas" width="400" height="400"></canvas>
+
 		<div id="setup-container">
 			<div id="game-info">
 				<p id="score" class="info-score">scored: </p>
@@ -23,7 +23,15 @@
 				<p class="title-slider">Action Randomization</p>
 				<input id="rangeRandom" type="range" class="slider" min="0" max="100" value="5">
 
-				<button id="btnTrain" type="button" class="btnGame">&#9654; train</button>
+				<div class="item-container">
+					<input id="fullSet" class="checkbox-fullset" type="checkbox">
+					<label for="fullSet" class="title-slider">Full set of states <small>(may take longer to train)</small></label>
+				</div>
+				<p></p>
+				<div class="item-container">
+					<button id="btnTrain" type="button" class="btnGame">&#9654; TRAIN</button>
+					<button id="btnReset" type="button" class="btnGame btnReset">reset</button>
+				</div>
 			</div>
 		</div>
 	</div>

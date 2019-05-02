@@ -5,7 +5,7 @@ var Snake = (function () {
 
   var intervalID;
   
-  var tileCount = 8;
+  var tileCount = 10;
   var gridSize = 400/tileCount;
 
   const INITIAL_PLAYER = { x: Math.floor(tileCount / 2), y: Math.floor(tileCount / 2) };
@@ -301,6 +301,10 @@ var Snake = (function () {
     pause: function () {
       velocity.x = 0;
       velocity.y = 0;
+    },
+
+    clearTopScore: function () {
+      pointsMax = 0;
     },
 
     data:  {

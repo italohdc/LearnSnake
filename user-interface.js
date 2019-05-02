@@ -18,7 +18,7 @@ var UserInterface = (function () {
     function KonamiCode (evt) {
         if(konamiOrder[konamiIndex] == evt.keyCode){
             konamiIndex++
-        } 
+        }
         else {
             konamiIndex = 0;
         }
@@ -36,7 +36,9 @@ var UserInterface = (function () {
     ///
 
     var btnTrain = document.getElementById('btnTrain');
+    var btnReset = document.getElementById('btnReset');
     btnTrain.addEventListener('click', speedFaster);
+    btnReset.addEventListener('click', resetSnake);
 
     var infoScore = document.getElementById('score');
     var infoMissed = document.getElementById('missed');
@@ -44,6 +46,7 @@ var UserInterface = (function () {
     var rangerLR = document.getElementById('rangeLR');
     var rangerDF = document.getElementById('rangeDF');
     var rangerRandom = document.getElementById('rangeRandom');
+    var checkboxFullSet = document.getElementById('fullSet');
 
     setInterval(loop, 100);
 
@@ -54,20 +57,49 @@ var UserInterface = (function () {
         QLearning.changeConst.LearningRate(0.01*rangerLR.value);
         QLearning.changeConst.DiscountFactor(0.01*rangerDF.value);
         QLearning.changeConst.Randomization(0.01*rangerRandom.value);
+        QLearning.changeConst.FullSetOfStates(checkboxFullSet.checked);
     }
-    
-    function speedFaster () {
-        QLearning.changeSpeed(1);
-        btnTrain.innerHTML = '&#9646;&#9646; train';
+
+    async function resetSnake () {
+        // await speedSlower();
+        // Snake.reset();
+        QLearning.stop();
+        QLearning.reset();
+        Snake.reset();
+        Snake.clearTopScore();
+        await speedSlower();
+    }
+
+    async function speedFaster () {
+        modifyingThreads = true;
+
+        rangerLR.disabled = true;
+        rangerDF.disabled = true;
+        rangerRandom.disabled = true;
+        checkboxFullSet.disabled = true;
+
+        QLearning.stop();
+        QLearning.startTrain();
+        btnTrain.innerHTML = '&vert; &vert; TRAIN';
         btnTrain.removeEventListener('click', speedFaster);
         btnTrain.addEventListener('click', speedSlower);
+        modifyingThreads = false;
     }
-    
-    function speedSlower () {
+
+    async function speedSlower () {
+        modifyingThreads = true;
+        QLearning.stopTrain();
         QLearning.changeFPS(defaultFPS);
-        btnTrain.innerHTML = '&#9654; train';
+
+        rangerLR.disabled = false;
+        rangerDF.disabled = false;
+        rangerRandom.disabled = false;
+        checkboxFullSet.disabled = false;
+        btnTrain.innerHTML = '&#9654; TRAIN';
+
         btnTrain.removeEventListener('click', speedSlower);
         btnTrain.addEventListener('click', speedFaster);
+        modifyingThreads = false;
     }
 
 })();

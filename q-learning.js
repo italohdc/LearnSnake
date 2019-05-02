@@ -5,7 +5,7 @@ var QLearning = (function () {
   // s'(s, act) = new state
 
   // Q(s, act) += LR * (rew + DF*max(Q(s',*)) - Q(s,act))
-  
+
   var qTable = {};
   var learningRate = 0.85; // Learning Rate
   var discountFactor = 0.9; // Discount Factor of Future Rewards
@@ -17,6 +17,10 @@ var QLearning = (function () {
   var missed = 0;
 
   var intervalID;
+  var defaultLoopsPerInterval = 1200;
+
+  var fullSetOfStates = false;
+
 
   var whichStateNow = function () {
     let tileCount = Snake.info.tileCount;
@@ -24,25 +28,25 @@ var QLearning = (function () {
 
     let fruit = Snake.data.fruit;
     let fruitRelativePose = { x:0, y:0 };
-    
+
     let trail = Snake.data.trail();
     let trailRelativePose = [];
 
     fruitRelativePose.x = fruit.x - player.x;
     while(fruitRelativePose.x < 0) fruitRelativePose.x += tileCount;
     while(fruitRelativePose.x > tileCount) fruitRelativePose.x -= tileCount;
-    
+
     fruitRelativePose.y = fruit.y - player.y;
     while(fruitRelativePose.y < 0) fruitRelativePose.y += tileCount;
     while(fruitRelativePose.y > tileCount) fruitRelativePose.y -= tileCount;
 
     var stateName = fruitRelativePose.x + ',' + fruitRelativePose.y;
       // + ',' + trail.length;
-    
-    for(let index = 0; index < 1; index++) {
-      
+
+    const maxLength = (fullSetOfStates ? trail.length : 1);
+    for(let index = 0; index < maxLength; index++) {
       if (trailRelativePose[index] == undefined) trailRelativePose.push({ x:0, y:0 });
-      
+
       trailRelativePose[index].x = trail[index].x - player.x;
       while(trailRelativePose[index].x < 0) trailRelativePose[index].x += tileCount;
       while(trailRelativePose[index].x > tileCount) trailRelativePose[index].x -= tileCount;
@@ -50,12 +54,12 @@ var QLearning = (function () {
       trailRelativePose[index].y = trail[index].y - player.y;
       while (trailRelativePose[index].y < 0) trailRelativePose[index].y += tileCount;
       while (trailRelativePose[index].y > tileCount) trailRelativePose[index].y -= tileCount;
-      
+
       stateName += ',' + trailRelativePose[index].x + ',' + trailRelativePose[index].y;
     }
     return stateName;
   };
-  
+
   var whichTable = function (s) {
     if(qTable[s] == undefined ) {
       qTable[s] = { 'up':0, 'down':0, 'left':0, 'right':0 };
@@ -65,7 +69,7 @@ var QLearning = (function () {
 
   var bestAction = function (s) {
     let q = whichTable(s);
-    
+
     if(Math.random() < randomize){
       let random = Math.floor(Math.random() * availableActions.length);
       return availableActions[random];
@@ -114,11 +118,32 @@ var QLearning = (function () {
 
   return {
     run: function () {
+      clearInterval(intervalID);
       intervalID = setInterval(Algorithm, 1000/15);
     },
-    
+
     stop: function () {
       clearInterval(intervalID);
+    },
+
+    startTrain: function (loopsPerInterval) {
+      clearInterval(intervalID);
+      const loops = loopsPerInterval ? loopsPerInterval : defaultLoopsPerInterval;
+      intervalID = setInterval(() => {
+        for (let index = 0; index < loops; index++) {
+          Algorithm();
+        }
+      }, 1000/15);
+    },
+
+    stopTrain: function () {
+      clearInterval(intervalID);
+    },
+
+    reset: function () {
+      qTable = {};
+      score = 0;
+      missed = 0;
     },
 
     changeConst: {
@@ -130,9 +155,12 @@ var QLearning = (function () {
       },
       Randomization: function (rand) {
         randomize = rand;
+      },
+      FullSetOfStates: function (fullSet) {
+        fullSetOfStates = fullSet;
       }
     },
-    
+
     changeFPS: function (fps) {
       clearInterval(intervalID);
       intervalID = setInterval(Algorithm, 1000/fps);
@@ -153,12 +181,15 @@ var QLearning = (function () {
     },
 
     qTable: {
+      show: function () {
+        console.table(qTable);
+      },
       export: function () {
         return qTable;
       },
       import: function (newQ) {
         qTable = newQ;
-      } 
+      }
     }
   }
 
